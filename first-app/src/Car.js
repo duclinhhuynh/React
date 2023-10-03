@@ -8,6 +8,9 @@ class Car extends React.Component {
             value : props.value,
         }
     }
+    static getDerivedStateFromProps(props, state){
+        return{ color: props.color};
+    }
     render ()  {
         return <h3 style ={{color: this.state.color}}>hi{this.state.value}</h3>;
     }
