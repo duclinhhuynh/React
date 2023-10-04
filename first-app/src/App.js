@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import Car from './Car';
+import MyForm from './MyForm';
 
 function App() {
   return (
@@ -10,15 +11,15 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <a
+        <p
           className="App-link"
-          href="£"
           target="_blank"
           rel="noopener noreferrer"
         >
           <Car color = 'red' value = 'xe cu toi'/>
-        </a>
-
+          <MyForm/>
+        </p>
+        
       </header>
     </div>
   );
