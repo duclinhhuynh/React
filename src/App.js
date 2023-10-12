@@ -13,6 +13,7 @@ class App extends React.Component{
     super();
     this.state = {
       data: [],
+      data2:'',
     };
     this.setStateHandler = this.setStateHandler.bind(this);
   }
@@ -30,10 +31,16 @@ class App extends React.Component{
     const myDiv = document.getElementById('myDiv');
     ReactDOM.findDOMNode(myDiv).style.color = 'green';
   }
+  updateState = (e) => {
+    this.setState({data2: e.target.value});
+  }
+  clearInput = () => {
+    this.setState({ data2: ''});
+    ReactDOM.findDOMNode(this.refs.myInput).focus();
+  }
 render() {
   return (
     <div className="App">
-      <header className="App-header">
       <Router>
       		<div>
         		<nav>
@@ -73,7 +80,14 @@ render() {
         <button onClick={this.findDomNodeHandler}>Find</button>
         <div id='myDiv'>Node</div>
       </div>
-      </header>
+      <input
+        value={this.state.data2}
+        onChange={this.updateState}
+        ref='myInput'
+      >
+      </input>
+      <button onClick={this.clearInput}>Clear</button>
+      <h4>{this.state.data}</h4>
     </div>
   );
 }
