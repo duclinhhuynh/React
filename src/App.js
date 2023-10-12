@@ -1,93 +1,62 @@
 import './App.css';
-import About from './About';
-// import Contact from './Contact';
-import{
-  BrowserRouter as Router,Switch,Route, Link} from 'react-router-dom';
-import Home from './Home';
 import React from 'react';
-import  ReactDOM  from 'react-dom';
+import Person from './Person'
+
 // import Contact from './Contact';
 
 class App extends React.Component{
   constructor(){
     super();
     this.state = {
-      data: [],
-      data2:'',
+      peopleUnder50: [], peopleAbove50: []
     };
-    this.setStateHandler = this.setStateHandler.bind(this);
   }
-  setStateHandler = () => {
-    const item = 'setState...'
-    const myArray = this.state.data.slice();
-    myArray.push(item);
-    this.setState({data: myArray});
-
-  }
-  forceUpdateHandler = () => {
-    this.forceUpdate();
-  }
-  findDomNodeHandler = () => {
-    const myDiv = document.getElementById('myDiv');
-    ReactDOM.findDOMNode(myDiv).style.color = 'green';
-  }
-  updateState = (e) => {
-    this.setState({data2: e.target.value});
-  }
-  clearInput = () => {
-    this.setState({ data2: ''});
-    ReactDOM.findDOMNode(this.refs.myInput).focus();
+  getData = () => {
+    console.log('getData');
+    fetch("https://randomuser.me/api/?results=10")
+      .then(res => res.json())
+      .then(
+        (result) => {
+        console.log('result', result.results);
+        const peopleUnder50 = result.results.filter(person => person.dob.age < 50)
+        const peopleAbove50 = result.results.filter(person => person.dob.age > 50)
+          this.setState({
+            peopleUnder50,
+            peopleAbove50,
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          console.log('error',error);
+          // this.setState({
+          //   isLoaded: true,
+          //   error
+          // });
+        }
+      )
   }
 render() {
   return (
     <div className="App">
-      <Router>
-      		<div>
-        		<nav>
-          			<ul>
-            			<li>
-                    <p>Hello</p>
-              				<Link to="/">Home</Link>
-            			</li>
-            			<li>
-              				{/* <Link to="/contact">Contact</Link> */}
-            			</li>
-                  <li>
-              				<Link to="/about">About</Link>
-            			</li>
-          			</ul>
-        		</nav>
-
-        		<Switch>
-              <Route exact path='/'>
-                <Home/>
-              </Route>
-              <Route  exact path='/about'>
-                <About/>
-              </Route>
-            </Switch>
-      		</div>
-    	</Router>
-      <div>
-        <button onClick={this.setStateHandler}>SET STATE</button>
-        <h4>State Array: {this.state.data}</h4>
+      <button onClick={() => this.getData()}>Lay du leu</button>
+      <div className='Mybox'>
+        {
+          this.state.peopleUnder50.map((value, index)=> {
+            // eslint-disable-next-line react/jsx-no-undef
+            return <Person key={index} data={value}/>
+          })
+        }
       </div>
-      <div>
-        <button onClick={this.forceUpdateHandler}>SET STATE</button>
-        <h4>number: {Math.random()}</h4>
+      <div className='Mybox'>
+        {
+          this.state.peopleAbove50.map((value, index)=> {
+            // eslint-disable-next-line react/jsx-no-undef
+            return <Person key={index} data={value}/>
+          })
+        }
       </div>
-      <div>
-        <button onClick={this.findDomNodeHandler}>Find</button>
-        <div id='myDiv'>Node</div>
-      </div>
-      <input
-        value={this.state.data2}
-        onChange={this.updateState}
-        ref='myInput'
-      >
-      </input>
-      <button onClick={this.clearInput}>Clear</button>
-      <h4>{this.state.data}</h4>
     </div>
   );
 }
